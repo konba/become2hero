@@ -1,5 +1,5 @@
-setting up a python development environment, using
+setting up a web monitor, steping
 
-1. virtualenv
-2. pip
-3. git
+1. create login page
+2. create test
+3. create index page
