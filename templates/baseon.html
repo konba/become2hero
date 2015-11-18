@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale-1.0">
 
   <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css" media="screen">
-  <link rel="stylesheet" href="static/styleoff.css" media="screen">
-
+  <link rel="stylesheet" href="static/styleon.css" media="screen">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -18,28 +17,24 @@
 	<nav class="navbar navbar-default">
 	  <div class="container">
 	    <div class="navbar-header">
-				<a class="navbar-brand logo" href="/">Sensor</a>
+				<a class="navbar-brand logo" href="/index">Sensor</a>
 	    </div>
 	    <div class="collapse navbar-collapse">
-				<form class="navbar-form navbar-right">
-					<a href="/login" type="submit" class="btn btn-default">Sign in</a>
-					<a type="submit" class="btn btn-success">Sign up</a>
-				</form>
+	    	<ul class="nav navbar-nav navbar-right">
+	    		<li class="dropdown">
+	    		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="caret"></span></a>
+	    			<ul class="dropdown-menu">
+	    				<li><a href="#">Action</a></li>
+	    				<li><a href="#">Another action</a></li>
+	    				<li><a href="#">Something else here</a></li>
+	    				<li role="separator" class="divider"></li>
+	    				<li><a href="#">Sign out</a></li>
+	    			</ul>
+	    		</li>
+	    	</ul>
 	    </div>
 	  </div>
 	</nav>
-
-	<!-- errors -->
-	{% if error %}
-	<div class="container">
-		<div class="alert alert-danger alert-dismissible" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span></button>
-			<strong>{{ error }}</strong>
-		</div>
-	</div>
-	{% endif %}
-
 	<div class="container">
 
 		<!-- child template -->
