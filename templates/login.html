@@ -1,0 +1,25 @@
+{% extends "baseoff.html" %}
+{% block content %}
+<div class="form-signin">
+	<div class="panel panel-default">
+		  <div class="panel-heading">
+				<h3 class="panel-title">Sign in</h3>
+		  </div>
+		  <div class="panel-body">
+				<form action="" method="post">
+					<div class="form-group">
+						<label for="InputUsername">Username</label>
+						<input type="text" name="username" class="form-control" value="{{request.form.username }}">
+					</div>
+					<div class="form-group">
+						<label for="InputUsername">Password</label>
+						<input type="password" name="password" class="form-control" value="{{request.form.password }}">
+					</div>
+					<button type="submit" class="btn btn-default">Sign in</button>
+				</form>
+		  </div>
+	</div>
+</div>
+{% endblock %}
+
+
