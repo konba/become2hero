@@ -41,15 +41,17 @@
 	{% endif %}
 
   <!-- messages -->
-  {% for message in get_flashed_messages() %}
-  <div class="container">
-		<div class="alert alert-warning alert-dismissible" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true">&times;</span></button>
-			<strong>{{ message }}</strong>
+  {% with messages = get_flashed_messages() %}
+  	{% if messages %}
+	  <div class="container">
+			<div class="alert alert-warning alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span></button>
+				<strong>{{ messages }}</strong>
+			</div>
 		</div>
-	</div>
-  {% endfor %}
+  	{% endif %}
+  {% endwith %}
 
 	<div class="container">
 

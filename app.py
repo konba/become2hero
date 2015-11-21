@@ -12,11 +12,14 @@ app.secret_key = 'E\x134\xa2rw,.L\x0f\x92s\x9b^\x99\x9a\x8a\r\xd2\x96\xb3\xe8_K'
 def login_required(f):
 	@wraps(f)
 	def wrap(*args, **kwargs):
+		error = None
 		if 'logged_in' in session:
 			return f(*args, **kwargs)
 		else:
-			flash('You need to login first.')
-			return redirect(url_for('login'))
+			error = 'You neeed to login first.'
+			# flash('You need to login first.')
+			# return redirect(url_for('login',error=error))
+			return render_template('login.html', error=error)
 	return wrap
 
 @app.route('/')
