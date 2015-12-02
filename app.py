@@ -3,10 +3,13 @@ from flask import Flask, render_template, redirect, \
 		url_for,request,session,flash
 from functools import wraps
 
+from flask.ext.socketio import SocketIO, emit
+
 app = Flask(__name__)
 
 #config
 app.secret_key = 'E\x134\xa2rw,.L\x0f\x92s\x9b^\x99\x9a\x8a\r\xd2\x96\xb3\xe8_K'
+socketio = SocketIO(app)
 
 # login required decorator
 def login_required(f):
@@ -21,6 +24,15 @@ def login_required(f):
 			# return redirect(url_for('login',error=error))
 			return render_template('login.html', error=error)
 	return wrap
+
+@socketio.on('connect')
+def socket_connect():
+  emit('response', {'data': 'Connected'})
+
+# using socketio to receiving message
+@socketio.on('message')
+def handle_message(message):
+	emit('response', {'data': message['data']})
 
 @app.route('/')
 def welcome():
@@ -52,4 +64,4 @@ def logout():
 
 # start the server with the 'run()' method
 if __name__ == '__main__':
-	app.run(debug=True)
+	socketio.run(app,debug=True)

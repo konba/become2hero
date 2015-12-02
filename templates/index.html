@@ -1,4 +1,26 @@
 {% extends "baseon.html" %}
 {% block content %}
-	<h1>Hello</h1>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+
+		var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+      socket.emit('my event', {data: 'I\'m connected!'});
+    });
+
+    socket.on('response', function(msg) {
+    	$('#log').append('<br>Received #' + msg.data);
+    });
+
+		$('form#emit').submit(function(event) {
+			socket.emit('message', {data: $('#emit_data').val()});
+			return false;
+		});
+	});
+</script>
+<p>Status : <span id='log'></span></p>
+<form id="emit" method="POST" action='#'>
+    <input type="text" name="emit_data" id="emit_data" placeholder="Message">
+    <input type="submit" value="Echo">
+</form>
 {% endblock %}
