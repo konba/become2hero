@@ -10,12 +10,16 @@
         });
 
 		$('form#emit').submit(function(event) {
+            $('#client').html('<br>Received #' + $('#emit_data').val());
 			socket.emit('message', {data: $('#emit_data').val()});
 			return false;
 		});
 	});
 </script>
 <div id='log'></div>
+<hr>
+<div id="client"></div>
+<br>
 <form id="emit" method="POST" action='#'>
     <input type="text" name="emit_data" id="emit_data" placeholder="Message">
     <input type="submit" value="Echo">
