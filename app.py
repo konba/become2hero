@@ -25,10 +25,6 @@ def login_required(f):
 			return render_template('login.html', error=error)
 	return wrap
 
-@socketio.on('connect')
-def socket_connect():
-  emit('response', {'data': 'Connected'})
-
 # using socketio to receiving message
 @socketio.on('message')
 def handle_message(message):
