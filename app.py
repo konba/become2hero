@@ -34,7 +34,7 @@ def handle_message(message):
 def welcome():
   return render_template('welcome.html')
 
-@app.route('/index')
+@app.route('/index',methods=['GET','POST'])
 @login_required
 def home():
 	return render_template('index.html')
