@@ -9,19 +9,16 @@
             $('#log').html('<br>Received #' + msg.data);
         });
 
-		$('form#emit').submit(function(event) {
+        $( "#echo" ).click(function() {
             $('#client').html('<br>Received #' + $('#emit_data').val());
-			socket.emit('message', {data: $('#emit_data').val()});
-			return false;
-		});
+            socket.emit('message', {data: $('#emit_data').val()});
+        });
 	});
 </script>
 <div id='log'></div>
 <hr>
 <div id="client"></div>
 <br>
-<form id="emit" method="POST" action='#'>
-    <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-    <input type="submit" value="Echo">
-</form>
+<input type="text" name="emit_data" id="emit_data" placeholder="Message">
+<input id='echo' type="button" value="Echo">
 {% endblock %}

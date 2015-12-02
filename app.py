@@ -28,9 +28,7 @@ def login_required(f):
 # using socketio to receiving message
 @socketio.on('message')
 def handle_message(message):
-	text = message['data']
-	print text
-	emit('response', {'data': 'Server Say :' + text})
+	emit('response', {'data': 'Server Say :' + message['data']})
 
 @app.route('/')
 def welcome():
