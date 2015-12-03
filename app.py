@@ -28,7 +28,6 @@ def login_required(f):
 # using socketio to receiving message
 @socketio.on('connect')
 def test_connect():
-	session['test'] = True
  	emit('response', {'data': 'Connected'})
 
 @socketio.on('message')
