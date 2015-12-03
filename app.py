@@ -32,7 +32,7 @@ def test_connect():
 
 @socketio.on('message')
 def handle_message(message):
-	emit('response', {'data': 'Server Say :' + message['data']})
+	emit('response', {'data': 'Server Say :' + message['data']}, broadcast=True)
 
 @app.route('/')
 def welcome():
