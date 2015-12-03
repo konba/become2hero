@@ -4,6 +4,7 @@
 	$(document).ready(function(){
 
 		var socket = io.connect('http://' + document.domain + ':' + location.port);
+        alert('http://' + document.domain + ':' + location.port);
 
         socket.on('response', function(msg) {
             $('#log').html('<br>Received #' + msg.data);
