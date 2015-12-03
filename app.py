@@ -26,6 +26,11 @@ def login_required(f):
 	return wrap
 
 # using socketio to receiving message
+@socketio.on('connect')
+def test_connect():
+	session['test'] = True
+ 	emit('response', {'data': 'Connected'})
+
 @socketio.on('message')
 def handle_message(message):
 	emit('response', {'data': 'Server Say :' + message['data']})
