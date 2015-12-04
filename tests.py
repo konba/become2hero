@@ -23,7 +23,7 @@ class LoginTestCase(unittest.TestCase):
             data=dict(username="admin", password="admin"),
             follow_redirects=True
         )
-        self.assertIn(b'Hello', response.data)
+        self.assertIn(b'Status', response.data)
 
 	# Ensure login behaves correctly with incorrect credentials
     def test_incorrect_login(self):

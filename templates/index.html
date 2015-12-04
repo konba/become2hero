@@ -1,27 +1,24 @@
 {% extends "baseon.html" %}
 {% block content %}
+<div>Status : <span id='message'></span></div>
+<hr>
+<div id='received'>
+    
+</div>
 <script type="text/javascript" charset="utf-8">
-	$(document).ready(function(){
+    $(document).ready(function(){
 
-		var socket = io.connect('http://' + document.domain + ':' + location.port);
+    		namespace = '/sensor';
 
-        socket.on('response', function(msg) {
-            $('#log').html('<br>Received #' + msg.data);
+        var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+
+        socket.on('status', function(msg) {
+            $('#message').html(msg.data);
         });
 
-		$('form#emit').submit(function(event) {
-            $('#client').html('<br>Received #' + $('#emit_data').val());
-			socket.emit('message', {data: $('#emit_data').val()});
-			return false;
-		});
-	});
+        socket.on('response',function(msg){
+            $('#received').html(msg.data);
+        });
+    });
 </script>
-<div id='log'></div>
-<hr>
-<div id="client"></div>
-<br>
-<form id="emit" method="POST" action='/index'>
-    <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-    <input type="submit" value="Echo">
-</form>
 {% endblock %}

@@ -26,13 +26,13 @@ def login_required(f):
 	return wrap
 
 # using socketio to receiving message
-@socketio.on('connect')
-def test_connect():
- 	emit('response', {'data': 'Connected'})
+@socketio.on('connect', namespace='/sensor')
+def connect():
+ 	emit('status', {'data': 'Connected'})
 
-@socketio.on('message')
+@socketio.on('message', namespace='/sensor')
 def handle_message(message):
-	emit('response', {'data': 'Server Say :' + message['data']}, broadcast=True)
+	emit('response', {'data': 'Server Receive : ' + message['data']}, broadcast=True)
 
 @app.route('/')
 def welcome():
