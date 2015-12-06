@@ -1,4 +1,24 @@
 {% extends "baseon.html" %}
 {% block content %}
-	<h1>Hello</h1>
+<div>Status : <span id='message'></span></div>
+<hr>
+<div id='received'>
+    
+</div>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+
+        namespace = '/sensor';
+
+        var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+
+        socket.on('status', function(msg) {
+            $('#message').html(msg.data);
+        });
+
+        socket.on('response',function(msg){
+            $('#received').html(msg.data);
+        });
+    });
+</script>
 {% endblock %}
