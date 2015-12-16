@@ -32,7 +32,7 @@ def connect():
 
 @socketio.on('message', namespace='/sensor')
 def handle_message(message):
-	emit('response', {'data': 'Server Receive : ' + message['data']}, broadcast=True)
+	emit('response', {'data': message['data']}, broadcast=True)
 
 @app.route('/')
 def welcome():
