@@ -7,10 +7,11 @@ from flask.ext.socketio import SocketIO, emit
 
 app = Flask(__name__)
 
-#config
+# config
 import os
 app.config.from_object(os.environ['APP_SETTINGS'])
 
+# socketio
 socketio = SocketIO(app)
 
 db = SQLAlchemy(app)
@@ -21,14 +22,12 @@ from models import *
 def login_required(f):
 	@wraps(f)
 	def wrap(*args, **kwargs):
-		error = None
 		if 'logged_in' in session:
 			return f(*args, **kwargs)
 		else:
-			error = 'You neeed to login first.'
 			# flash('You need to login first.')
-			# return redirect(url_for('login',error=error))
-			return render_template('login.html', error=error)
+			return redirect(url_for('login'))
+			# return render_template('login.html', error=error)
 	return wrap
 
 # using socketio to receiving message
@@ -42,9 +41,7 @@ def handle_message(message):
 
 @app.route('/')
 def welcome():
-
-	posts = db.session.query(User).all()
-	return render_template('welcome.html',posts=posts)
+	return render_template('welcome.html')
 
 @app.route('/index',methods=['GET','POST'])
 @login_required
@@ -69,6 +66,25 @@ def login():
 def logout():
 	session.pop('logged_in',None)
 	return redirect(url_for('welcome'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+	error = None
+	if request.method == 'POST':
+		user = User.query.filter_by(name=request.form['username']).first()
+		if user is None:			
+			new_user = User(
+					name = request.form['username'],
+					email = request.form['email'],
+					password = request.form['password']
+			)
+			db.session.add(new_user)
+			db.session.commit()
+			flash('Register success please try to login.')
+			return redirect(url_for('login'))
+		else:
+			error = 'Username is invalid. Please try agin'
+	return render_template('register.html', error=error)
 
 # start the server with the 'run()' method
 if __name__ == '__main__':
