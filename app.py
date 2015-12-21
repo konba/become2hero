@@ -2,14 +2,20 @@
 from flask import Flask, render_template, redirect, \
 		url_for,request,session,flash
 from functools import wraps
-
+from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.socketio import SocketIO, emit
 
 app = Flask(__name__)
 
 #config
 app.secret_key = 'E\x134\xa2rw,.L\x0f\x92s\x9b^\x99\x9a\x8a\r\xd2\x96\xb3\xe8_K'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/trus_sensor'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 socketio = SocketIO(app)
+
+db = SQLAlchemy(app)
+
+from models import *
 
 # login required decorator
 def login_required(f):
@@ -36,7 +42,9 @@ def handle_message(message):
 
 @app.route('/')
 def welcome():
-  return render_template('welcome.html')
+
+	posts = db.session.query(User).all()
+	return render_template('welcome.html',posts=posts)
 
 @app.route('/index',methods=['GET','POST'])
 @login_required
@@ -48,12 +56,12 @@ def home():
 def login():
 	error = None
 	if request.method == 'POST':
-		if (request.form['username'] != 'admin') \
-				or request.form['password'] != 'admin':
-			error = 'Invalid Credentials. Please try again.'
-		else:
+		user = User.query.filter_by(name=request.form['username']).first()
+		if user is not None and user.password == request.form['password']:
 			session['logged_in'] = True
 			return redirect(url_for('home'))
+		else:
+			error = 'Invalid Credentials. Please try again.'
 	return render_template('login.html', error=error)
 
 @app.route('/logout')

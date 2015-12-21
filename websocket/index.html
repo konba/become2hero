@@ -16,8 +16,8 @@
 	$(document).ready(function(){
 
 		namespace = '/sensor';
-		// var socket = io.connect('http://trus-sensor.herokuapp.com' + namespace);
-		var socket = io.connect('http://localhost:5000' + namespace);
+		var socket = io.connect('http://trus-sensor.herokuapp.com' + namespace);
+		// var socket = io.connect('http://localhost:5000' + namespace);
 
 		$('form#emit').submit(function(event) {
 			socket.emit('message', {data: $('#emit_data').val()});

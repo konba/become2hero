@@ -1,4 +1,9 @@
 {% extends "baseoff.html" %}
 {% block content %}
 	<h1>Welcome to Sensor!</h1>
+	{% for post in posts %}
+	  <strong>Title:</strong> {{ post.name }} <br>
+	  <strong>Post:</strong> {{ post.password }} <br>
+	<br>
+	{% endfor %}
 {% endblock %}
