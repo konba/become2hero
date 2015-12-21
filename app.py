@@ -8,9 +8,9 @@ from flask.ext.socketio import SocketIO, emit
 app = Flask(__name__)
 
 #config
-app.secret_key = 'E\x134\xa2rw,.L\x0f\x92s\x9b^\x99\x9a\x8a\r\xd2\x96\xb3\xe8_K'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/trus_sensor'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+import os
+app.config.from_object(os.environ['APP_SETTINGS'])
+
 socketio = SocketIO(app)
 
 db = SQLAlchemy(app)
@@ -72,4 +72,4 @@ def logout():
 
 # start the server with the 'run()' method
 if __name__ == '__main__':
-	socketio.run(app,debug=True)
+	socketio.run(app)
