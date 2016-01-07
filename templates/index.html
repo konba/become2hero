@@ -2,74 +2,40 @@
 {% block title %}Index{% endblock %} 
 {% block content %}
 <style>
-    #map { height: 350px; }
-    #graph{ font: 10px sans-serif; }
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
+  #graph{ font: 10px sans-serif; }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
 
-    .line {
-      fill: none;
-      stroke: steelblue;
-      stroke-width: 1.5px;
-    }
-    
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+  .temperature_now{
+    font-size: 3.4rem;
+    color: #e64946;
+    font-weight: bold;
+    line-height: 0.8;
+    padding-right: 30px;
+  }
 </style>
-<!-- <div>Status : <span id='message'></span></div>
-<hr>
-<div id='received'>
-    
-</div> -->
-<div class="row">
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="map"></div>
-                <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Country</th>
-                        <th>Status</th>
-                        <th>Value</th>
-                        <th>Last update</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Bangkok</td>
-                        <td>Online</td>
-                        <td>23 ºC</td>
-                        <td>6/1/2016 10:57:47 AM</td>
-                    </tr>
-                    <tr>
-                        <td>Bangkok</td>
-                        <td>Offline</td>
-                        <td>25 ºC</td>
-                        <td>6/1/2016 10:57:47 AM</td>
-                    </tr>
-                    <tr>
-                        <td>Samutsakorn</td>
-                        <td>Online</td>
-                        <td>21 ºC</td>
-                        <td>6/1/2016 10:57:47 AM</td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <div class="panel panel-default">
-            <div class="panel-body">
-               <div id="graph"></div>
-            </div>
-        </div>
-    </div>
+<div>
+    <span id='now'></span>
+    <span class='temperature_now pull-right'>36 ºC</span>
 </div>
+<div id="graph"></div>
 <script type="text/javascript" charset="utf-8">
+
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+
+    var d = new Date()
+
+    document.getElementById('now').innerHTML = monthNames[d.getMonth()] + ' ' + d.getDay() + ', ' + d.getFullYear()
 
     var data = [{
         "x": "0",
@@ -88,7 +54,7 @@
         "y": "21"
     }];
 
-    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+    var margin = {top: 20, right: 30, bottom: 30, left: 20},
         width = $("#graph").parent().width() - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
 
@@ -145,28 +111,5 @@
       .attr("class", "line")
       .attr("d", line);
 
-    var date = new Date()
-    console.log(date.toLocaleTimeString())
-
-</script>
-<script>
-
-    var map;
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 13.2, lng: 100.6331},
-        zoom: 4
-      });
-
-      var marker = new google.maps.Marker({
-        map : map,
-        position: {lat: 13.6622, lng: 100.4422},
-        title: 'Home'
-      })
-    }
-
-</script>
-<script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqANBntyuMnAfgF_BBXJpkXWrYSB26VLM&callback=initMap">
 </script>
 {% endblock %}

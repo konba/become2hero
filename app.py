@@ -61,7 +61,7 @@ def login():
 		user = User.query.filter_by(name=request.form['username']).first()
 		if user is not None and user.password == request.form['password']:
 			session['logged_in'] = True
-			return redirect(url_for('demo'))
+			return redirect(url_for('home'))
 		else:
 			error = 'Invalid Credentials. Please try again.'
 	return render_template('login.html', error=error)
