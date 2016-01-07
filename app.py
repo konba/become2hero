@@ -43,7 +43,7 @@ def handle_message(message):
 def welcome():
 	return render_template('login.html')
 
-@app.route('/demo')
+@app.route('/demo',methods=['GET','POST'])
 @login_required
 def demo():
 	return render_template('demo.html')
