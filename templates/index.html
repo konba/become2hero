@@ -2,157 +2,171 @@
 {% block title %}Index{% endblock %} 
 {% block content %}
 <style>
-    .graph .axis {
-        stroke-width: 1;
+    #map { height: 350px; }
+    #graph{ font: 10px sans-serif; }
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
     }
 
-    .graph .axis .tick line {
-        stroke: black;
+    .line {
+      fill: none;
+      stroke: steelblue;
+      stroke-width: 1.5px;
     }
-
-    .graph .axis .tick text {
-        fill: black;
-        font-size: 0.7em;
-    }
-
-    .graph .axis .domain {
-        fill: none;
-        stroke: black;
-    }
-
-    .graph .group {
-        fill: none;
-        stroke: black;
-        stroke-width: 1.5;
-    }
+    
 </style>
-<div>Status : <span id='message'></span></div>
+<!-- <div>Status : <span id='message'></span></div>
 <hr>
 <div id='received'>
     
+</div> -->
+<div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="map"></div>
+                <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th>Status</th>
+                        <th>Value</th>
+                        <th>Last update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bangkok</td>
+                        <td>Online</td>
+                        <td>23 ºC</td>
+                        <td>6/1/2016 10:57:47 AM</td>
+                    </tr>
+                    <tr>
+                        <td>Bangkok</td>
+                        <td>Offline</td>
+                        <td>25 ºC</td>
+                        <td>6/1/2016 10:57:47 AM</td>
+                    </tr>
+                    <tr>
+                        <td>Samutsakorn</td>
+                        <td>Online</td>
+                        <td>21 ºC</td>
+                        <td>6/1/2016 10:57:47 AM</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+               <div id="graph"></div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="graph"></div>
 <script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
 
-        namespace = '/sensor';
+    var data = [{
+        "x": "0",
+        "y": "32"
+    }, {
+        "x": "1",
+        "y": "25"
+    }, {
+        "x": "2",
+        "y": "31"
+    }, {
+        "x": "3",
+        "y": "33"
+    }, {
+        "x": "4",
+        "y": "21"
+    }];
 
-        var count = 0
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = $("#graph").parent().width() - margin.left - margin.right,
+        height = 250 - margin.top - margin.bottom;
 
-        var limit = 60 * 1,
-            duration = 750,
-            now = new Date(Date.now() - duration)
+    var x = d3.scale.linear()
+        .range([0, width]);
 
-        var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+    var y = d3.scale.linear()
+        .range([height, 0]);
 
-        socket.on('status', function(msg) {
-            $('#message').html(msg.data);
-        });
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
 
-        socket.on('response',function(msg){
-            count = msg.data
-            $('#received').html('Server Receive : ' + msg.data);
-        });
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
 
+    var line = d3.svg.line()
+        .interpolate("basis")
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); });
 
+    var svg = d3.select("#graph").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var margin = {top: 20, right: 30,bottom: 40, left: 20},
-            width = 500 - margin.left - margin.right,
-            height = 350 - margin.top - margin.bottom
-
-        var groups = {
-            output: {
-                value: 0,
-                color: 'green',
-                data: d3.range(limit).map(function() {
-                    return 0
-                })
-            }
-        }
-
-        var x = d3.time.scale()
-            .domain([now - (limit - 2), now - duration])
-            .range([0, width])
-
-        var y = d3.scale.linear()
-            .domain([0, 100])
-            .range([height, 0])
-
-        var line = d3.svg.line()
-            // .interpolate('basis')
-            .x(function(d, i) {
-                return x(now - (limit - 1 - i) * duration)
-            })
-            .y(function(d) {
-                return y(d)
-            })
-
-        var svg = d3.select('.graph').append('svg')
-            .attr('class', 'chart')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
-          .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-
-
-        var axis = svg.append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0,' + height + ')')
-            .call(x.axis = d3.svg.axis().scale(x).orient('bottom'))
-
-        svg.append('g')
-            .attr('class', 'y axis')
-            .call(y.axis = d3.svg.axis().scale(y).orient('left'))
-
-        var paths = svg.append('g')
-
-        for (var name in groups) {
-            var group = groups[name]
-            group.path = paths.append('path')
-                .data([group.data])
-                .attr('class', name + ' group')
-                .style('stroke', group.color)
-        }
-
-        function tick() {
-            now = new Date()
-
-            // Add new values
-            for (var name in groups) {
-                var group = groups[name]
-                group.data.push(count)
-                // group.data.push(group.value) // Real values arrive at irregular intervals
-                // group.data.push(20 + Math.random() * 100)
-                group.path.attr('d', line)
-            }
-
-            count = 0
-
-            // Shift domain
-            x.domain([now - (limit - 2) * duration, now - duration])
-
-            // Slide x-axis left
-            axis.transition()
-                .duration(duration)
-                .ease('linear')
-                .call(x.axis)
-
-            // Slide paths left
-            paths.attr('transform', null)
-                .transition()
-                .duration(duration)
-                .ease('linear')
-                .attr('transform', 'translate(' + x(now - (limit - 1) * duration) + ')')
-                .each('end', tick)
-
-            // Remove oldest data point from each group
-            for (var name in groups) {
-                var group = groups[name]
-                group.data.shift()
-            }
-        }
-
-        tick()
+    data.forEach(function(d) {
+        d.x = +d.x;
+        d.y = +d.y;
     });
+
+    x.domain(d3.extent(data, function(d) { return d.x; }));
+    y.domain([0,100]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Temperature (ºC)");
+
+    svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+
+    var date = new Date()
+    console.log(date.toLocaleTimeString())
+
+</script>
+<script>
+
+    var map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 13.2, lng: 100.6331},
+        zoom: 4
+      });
+
+      var marker = new google.maps.Marker({
+        map : map,
+        position: {lat: 13.6622, lng: 100.4422},
+        title: 'Home'
+      })
+    }
+
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqANBntyuMnAfgF_BBXJpkXWrYSB26VLM&callback=initMap">
 </script>
 {% endblock %}

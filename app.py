@@ -41,7 +41,12 @@ def handle_message(message):
 
 @app.route('/')
 def welcome():
-	return render_template('welcome.html')
+	return render_template('login.html')
+
+@app.route('/demo')
+@login_required
+def demo():
+	return render_template('demo.html')
 
 @app.route('/index',methods=['GET','POST'])
 @login_required
@@ -56,7 +61,7 @@ def login():
 		user = User.query.filter_by(name=request.form['username']).first()
 		if user is not None and user.password == request.form['password']:
 			session['logged_in'] = True
-			return redirect(url_for('home'))
+			return redirect(url_for('demo'))
 		else:
 			error = 'Invalid Credentials. Please try again.'
 	return render_template('login.html', error=error)
@@ -65,7 +70,7 @@ def login():
 @login_required
 def logout():
 	session.pop('logged_in',None)
-	return redirect(url_for('welcome'))
+	return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

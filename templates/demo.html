@@ -1,0 +1,115 @@
+{% extends "baseon.html" %}
+{% block title %}Index{% endblock %} 
+{% block content %}
+<style>
+  #graph{ font: 10px sans-serif; }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+  .temperature_now{
+    font-size: 3.4rem;
+    color: #e64946;
+    font-weight: bold;
+    line-height: 0.8;
+    padding-right: 30px;
+  }
+</style>
+<div>
+	<span id='now'></span>
+	<span class='temperature_now pull-right'>36 ºC</span>
+</div>
+<div id="graph"></div>
+<script type="text/javascript" charset="utf-8">
+
+	var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+
+	var d = new Date()
+
+	document.getElementById('now').innerHTML = monthNames[d.getMonth()] + ' ' + d.getDay() + ', ' + d.getFullYear()
+
+	var data = [{
+        "x": "0",
+        "y": "32"
+    }, {
+        "x": "1",
+        "y": "25"
+    }, {
+        "x": "2",
+        "y": "31"
+    }, {
+        "x": "3",
+        "y": "33"
+    }, {
+        "x": "4",
+        "y": "21"
+    }];
+
+    var margin = {top: 20, right: 30, bottom: 30, left: 20},
+        width = $("#graph").parent().width() - margin.left - margin.right,
+        height = 250 - margin.top - margin.bottom;
+
+    var x = d3.scale.linear()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+    var line = d3.svg.line()
+        .interpolate("basis")
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); });
+
+    var svg = d3.select("#graph").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    data.forEach(function(d) {
+        d.x = +d.x;
+        d.y = +d.y;
+    });
+
+    x.domain(d3.extent(data, function(d) { return d.x; }));
+    y.domain([0,100]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Temperature (ºC)");
+
+    svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+
+</script>
+{% endblock %}
