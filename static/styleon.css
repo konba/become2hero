@@ -1,12 +1,8 @@
-.trus-docs .navbar-header .navbar-toggle{
-	  background-color: #f9f9f9;
-    border-color: #f9f9f9;
+
+.trus-docs {
+	max-height: 400px;
 }
 
-.trus-docs .navbar-toggle {
-	padding: 5px 10px;
-}
-
-.text-muted{
+.text-muted {
 	font: 1.2rem sans-serif;
 }

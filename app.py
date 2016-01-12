@@ -43,10 +43,10 @@ def handle_message(message):
 def welcome():
 	return render_template('login.html')
 
-@app.route('/demo',methods=['GET','POST'])
+@app.route('/locate',methods=['GET','POST'])
 @login_required
-def demo():
-	return render_template('demo.html')
+def locate():
+	return render_template('location.html')
 
 @app.route('/index',methods=['GET','POST'])
 @login_required
@@ -61,7 +61,7 @@ def login():
 		user = User.query.filter_by(name=request.form['username']).first()
 		if user is not None and user.password == request.form['password']:
 			session['logged_in'] = True
-			return redirect(url_for('home'))
+			return redirect(url_for('locate'))
 		else:
 			error = 'Invalid Credentials. Please try again.'
 	return render_template('login.html', error=error)
